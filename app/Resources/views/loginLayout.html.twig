@@ -1,0 +1,13 @@
+{% extends "::base.html.twig" %}
+
+{% block body %}
+    <div class="page-box">
+        <div class="container-fluid">
+
+            <div class="loginContainer">
+                {% block fos_user_content %}{% endblock fos_user_content %}
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

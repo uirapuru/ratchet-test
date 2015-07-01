@@ -1,0 +1,4 @@
+ratchet_test_core:
+    resource: "@RatchetTestCoreBundle/Controller/"
+    type:     annotation
+    prefix:   /
