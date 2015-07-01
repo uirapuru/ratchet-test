@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="ratchet-test" default="prepare">
+    <import file="${project.basedir}/vendor/dende/common-bundle/Dende/CommonBundle/Resources/phing/properties.xml"/>
+    <import file="${project.basedir}/vendor/dende/common-bundle/Dende/CommonBundle/Resources/phing/database.xml"/>
+    <import file="${project.basedir}/vendor/dende/common-bundle/Dende/CommonBundle/Resources/phing/tests.xml"/>
+    <import file="${project.basedir}/vendor/dende/common-bundle/Dende/CommonBundle/Resources/phing/fixers.xml"/>
+    <import file="${project.basedir}/vendor/dende/common-bundle/Dende/CommonBundle/Resources/phing/reports.xml"/>
+
+    <target name="websocket-server">
+        <exec command="${php_bin} src/RatchetTest/Component/Controller/notification_server_dev.php" checkreturn="true" passthru="true" />
+    </target>
+
+    <target name="clear-cache">
+        <echo>Clearing cache - ${env} environment</echo>
+        <exec command="${php_bin} ${symfony_console} cache:clear --env=#{env}" checkreturn="true" passthru="true" />
+    </target>
+
+    <target name="cc">
+        <phingcall target="clear-cache" />
+    </target>
+
+    <target name="composer:download">
+        <exec executable="sh" passthru="true" checkreturn="true">
+            <arg value="-c 'curl -sS https://getcomposer.org/installer | php'" />
+        </exec>
+    </target>
+
+    <target name="composer:install" depends="composer:download">
+        <exec executable="#{composer}" passthru="true" checkreturn="true">
+            <arg value="install" />
+            <arg value="--env=#{env}" />
+        </exec>
+    </target>
+
+    <target name="assets">
+        <exec executable="./node_modules/.bin/grunt" passthru="true" checkreturn="true" />
+
+        <exec executable="./app/console" passthru="true" checkreturn="true">
+            <arg value="assets:install" />
+        </exec>
+    </target>
+
+
+</project>

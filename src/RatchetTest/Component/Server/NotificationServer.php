@@ -8,15 +8,19 @@ use RatchetTest\Bundle\CoreBundle\Entity\Document;
 class NotificationServer implements MessageComponentInterface {
     protected $clients;
 
+    /**
+     * @var \Symfony\Component\DependencyInjection\ContainerInterface
+     */
+    protected $container;
+
     public function __construct(\AppKernel $kernel) {
         $this->clients = new \SplObjectStorage;
         $this->kernel = $kernel;
+        $this->container = $kernel->getContainer();
     }
 
     public function onOpen(ConnectionInterface $conn) {
-        // Store the new connection to send messages to later
         $this->clients->attach($conn);
-
         echo "New connection! ({$conn->resourceId})\n";
     }
 
@@ -25,25 +29,17 @@ class NotificationServer implements MessageComponentInterface {
         echo sprintf('Connection %d sending message "%s" to %d other connection%s' . "\n"
             , $from->resourceId, $msg, $numRecv, $numRecv == 1 ? '' : 's');
 
-        $documents = $this->kernel->getContainer()->get("doctrine.orm.entity_manager")
+        $documents = $this->container->get("doctrine.orm.entity_manager")
             ->getRepository("RatchetTestCoreBundle:Document")->findAll();
 
-        $count = count($documents);
-
-        $titles = array_map(function(Document $document){
-            return $document->getTitle();
-        }, $documents);
+        /* @var \JMS\Serializer\Serializer */
+        $serializer = $this->container->get("jms_serializer");
 
         foreach ($this->clients as $client) {
             if ($from !== $client) {
-                // The sender is not the receiver, send to each client connected
-                $client->send(
-                    "There was a message: ".$msg .
-                    "\n env: ".$this->kernel->getEnvironment() .
-                    "\n root dir:" . $this->kernel->getRootDir() .
-                    "\n documents count:" . $count .
-                    "\n titles: " . implode(", ", $titles)
-                );
+                $client->send($serializer->serialize([
+                    "message" => "cześć"
+                ], "json"));
             }
         }
     }

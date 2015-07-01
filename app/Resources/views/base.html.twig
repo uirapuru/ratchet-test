@@ -37,6 +37,32 @@
     </div>
 </div>
 
+<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script src="{{ asset("/bundles/ratchettestcore/js/notify.js") }}"></script>
+
+<script>
+    var msg = function(msg) {
+        $.notify(msg, "success");
+    };
+
+    var conn = new WebSocket('ws://localhost:8080');
+
+    conn.onopen = function(e) {
+        msg("Connection established!");
+    };
+
+    conn.onmessage = function(e) {
+        console.log(e);
+        msg(e.data);
+    };
+
+    $(function(){
+        msg("Page initialized");
+        conn.send("no cześć");
+    });
+</script>
+
 {% block javascripts %}
     {#<script src="{% if app.environment == 'prod' %}{{ asset('js/backend/vendors.min.js') }}{% else %}{{ asset('js/backend/vendors.js') }}{% endif %}" type="text/javascript"></script>#}
     {#<script src="{% if app.environment == 'prod' %}{{ asset('js/backend/project.min.js') }}{% else %}{{ asset('js/backend/project.js') }}{% endif %}" type="text/javascript"></script>#}

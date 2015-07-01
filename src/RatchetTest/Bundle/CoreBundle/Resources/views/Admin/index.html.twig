@@ -2,17 +2,7 @@
 
 {% block body %}
 witaj w panelu admina
+
+{{ form(addDocumentForm) }}
+
 {% endblock body %}
-
-{% block javascripts %}
-    <script>
-        var conn = new WebSocket('ws://localhost:8080');
-        conn.onopen = function(e) {
-            alert("Connection established!");
-        };
-
-        conn.onmessage = function(e) {
-            alert(e.data);
-        };
-    </script>
-{% endblock javascripts %}

@@ -1,0 +1,5 @@
+services:
+  ratchettest.form_type.document:
+    class: RatchetTest\Bundle\CoreBundle\Form\Type\DocumentType
+    tags:
+      - {name: form.type, alias: ratchettest_document}

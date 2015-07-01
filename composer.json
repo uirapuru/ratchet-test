@@ -25,6 +25,8 @@
         "incenteev/composer-parameter-handler": "~2.0",
 
         "cboden/ratchet": "0.3.*",
+        "react/zmq": "0.2.*|0.3.*",
+
         "phing/phing": "~2.9",
         "jms/serializer-bundle": "0.13.*",
         "friendsofsymfony/user-bundle": "~2.0@dev",
